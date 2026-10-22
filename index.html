@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎂</title>
+    <style>
+        :root {
+            --kraft-bg: #d8b48e;
+            --kraft-dark: #b8926a;
+            --pink-gingham: #ffc2d1;
+            --paper-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--kraft-bg);
+            background-image: 
+                radial-gradient(rgba(255,255,255,0.2) 15%, transparent 16%),
+                radial-gradient(rgba(0,0,0,0.05) 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            font-family: 'Courier New', Courier, monospace, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #444;
+            z-index: 100;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .mic-btn {
+            background: #ff6b8b;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .mic-btn:hover {
+            background: #ff476f;
+        }
+
+        .meter-container {
+            width: 80px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .meter-fill {
+            height: 100%;
+            width: 0%;
+            background: #4cd137;
+            transition: width 0.05s linear;
+        }
+
+        .card-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            min-height: 580px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            margin-top: 10px;
+        }
+
+        .card-cover {
+            position: relative;
+            width: 420px;
+            height: 560px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: var(--paper-shadow);
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left center;
+            overflow: hidden;
+            border: 8px solid #fff;
+        }
+
+        .card-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .cover-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            animation: bounce 1.5s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-6px); }
+        }
+
+        .card-spread {
+            display: none;
+            position: relative;
+            width: 900px;
+            height: 580px;
+            background: #fdfbf7;
+            border-radius: 10px;
+            box-shadow: var(--paper-shadow);
+            display: flex;
+            overflow: hidden;
+            border: 10px solid #fff;
+        }
+
+        .card-spread.hidden {
+            display: none !important;
+        }
+
+        .page {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            background-color: #fff5f7;
+            background-image: 
+                linear-gradient(45deg, #ffccd5 25%, transparent 25%), 
+                linear-gradient(-45deg, #ffccd5 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #ffccd5 75%), 
+                linear-gradient(-45deg, transparent 75%, #ffccd5 75%);
+            background-size: 30px 30px;
+            background-position: 0 0, 0 15px, 15px -15px, -15px 0px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .page.left-page {
+            border-right: 2px dashed #e8b4bc;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            background: #fff;
+            border: 2px solid #ff6b8b;
+            color: #ff6b8b;
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 50;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #ff6b8b;
+            color: #fff;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .envelope-container:hover {
+            transform: scale(1.02);
+        }
+
+        .envelope-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15));
+        }
+
+        .envelope-hint {
+            position: absolute;
+            bottom: -35px;
+            font-size: 12px;
+            color: #777;
+            font-weight: bold;
+            background: rgba(255,255,255,0.9);
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+
+        .letter-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.3);
+            width: 340px;
+            height: 460px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            opacity: 0.pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .letter-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .letter-modal img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .letter-close-hint {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+
+        .cake-wrapper {
+            position: relative;
+            width: 320px;
+            height: 440px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cake-base-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15));
+        }
+
+        .flame {
+            position: absolute;
+            width: 28px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform-origin: bottom center;
+            transition: transform 0.2s ease, opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .flame-1 { left: 115px; top: 125px; }
+        .flame-2 { left: 155px; top: 150px; }
+        .flame-3 { left: 195px; top: 110px; }
+
+        .flame.blowing {
+            transform: skewX(-35deg) translateY(-8px) scale(0.9);
+        }
+
+        .flame.extinguished {
+            opacity: 0;
+            transform: scale(0) translateY(-20px);
+        }
+
+        .wish-success {
+            position: absolute;
+            top: 20px;
+            background: #ff476f;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255,71,111,0.4);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.5s;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .wish-success.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <span>🎤 Mic status: <strong id="mic-status">Inactive</strong></span>
+        <button class="mic-btn" id="mic-toggle-btn">Enable Mic to Blow</button>
+        <div>
+            Level: 
+            <div class="meter-container"><div class="meter-fill" id="meter-fill"></div></div>
+        </div>
+        <span style="font-size: 12px; color: #666;">(Tip: Press <strong>Spacebar</strong> to blow!)</span>
+    </div>
+
+    <div class="card-container">
+        <div class="card-cover" id="card-cover" onclick="openCard()">
+            <img src="image.png" alt="Birthday Cover">
+            <div class="cover-hint">Tap to Open Card ✨</div>
+        </div>
+
+        <div class="card-spread hidden" id="card-spread">
+            <button class="back-btn" onclick="closeCard()">← Back to Cover</button>
+
+            <div class="page left-page">
+                <div class="envelope-container" onclick="toggleLetter()">
+                    <img src="image_2.png" alt="Envelope" class="envelope-img">
+                    <div class="envelope-hint">Tap letter to read 💌</div>
+                </div>
+
+                <div class="letter-modal" id="letter-modal" onclick="toggleLetter()">
+                    <img src="image_3.png" alt="Birthday Message">
+                    <div class="letter-close-hint">Tap again to tuck back</div>
+                </div>
+            </div>
+
+            <div class="page right-page">
+                <div class="wish-success" id="wish-success">Make a Wish Granted! 🎉🎂</div>
+                <div class="cake-wrapper" id="cake-wrapper">
+                    <canvas id="cake-canvas" class="cake-base-img"></canvas>
+                    <div class="flame flame-1" id="flame-1"></div>
+                    <div class="flame flame-2" id="flame-2"></div>
+                    <div class="flame flame-3" id="flame-3"></div>
+                </div>
+                <div style="margin-top: 15px; font-size: 13px; color: #666; text-align: center;">
+                    Blow into your mic or hold <strong>Spacebar</strong> to blow out the candles! 💨
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function openCard() {
+            document.getElementById('card-cover').style.display = 'none';
+            document.getElementById('card-spread').classList.remove('hidden');
+            initCakeAndFlames();
+        }
+
+        function closeCard() {
+            document.getElementById('card-spread').classList.add('hidden');
+            document.getElementById('card-cover').style.display = 'block';
+            document.getElementById('letter-modal').classList.remove('active');
+        }
+
+        function toggleLetter() {
+            const modal = document.getElementById('letter-modal');
+            modal.classList.toggle('active');
+        }
+
+        let flamesExtinguished = false;
+        let flameDataUrl = '';
+
+        function initCakeAndFlames() {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = "image_4.png";
+            img.onload = function() {
+                const canvas = document.getElementById('cake-canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+
+                ctx.drawImage(img, 0, 0);
+
+                const flameBoxes = [
+                    { x: Math.round(img.width * 0.52), y: Math.round(img.height * 0.38), w: 60, h: 90 },
+                    { x: Math.round(img.width * 0.59), y: Math.round(img.height * 0.44), w: 60, h: 90 },
+                    { x: Math.round(img.width * 0.68), y: Math.round(img.height * 0.33), w: 60, h: 90 }
+                ];
+
+                flameBoxes.forEach((box, index) => {
+                    const flameCanvas = document.createElement('canvas');
+                    flameCanvas.width = box.w;
+                    flameCanvas.height = box.h;
+                    const fCtx = flameCanvas.getContext('2d');
+                    fCtx.drawImage(img, box.x, box.y, box.w, box.h, 0, 0, box.w, box.h);
+
+                    const flameEl = document.getElementById(`flame-${index + 1}`);
+                    if (flameEl) {
+                        flameEl.style.backgroundImage = `url(${flameCanvas.toDataURL()})`;
+                    }
+                });
+
+                ctx.fillStyle = "#fff5f7";
+                flameBoxes.forEach(box => {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.ellipse(box.x + box.w/2, box.y + box.h/2 + 10, box.w/2.2, box.h/2.5, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = "#fce8eb";
+                    ctx.fill();
+                    ctx.restore();
+                });
+            };
+        }
+
+        let audioContext = null;
+        let analyser = null;
+        let microphone = null;
+        let isListening = false;
+        let blowDuration = 0;
+        let blowTimer = null;
+        let spacebarPressed = false;
+
+        const micBtn = document.getElementById('mic-toggle-btn');
+        const micStatus = document.getElementById('mic-status');
+        const meterFill = document.getElementById('meter-fill');
+
+        micBtn.addEventListener('click', async () => {
+            if (!isListening) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    analyser = audioContext.createAnalyser();
+                    microphone = audioContext.createMediaStreamSource(stream);
+                    microphone.connect(analyser);
+                    analyser.fftSize = 512;
+
+                    isListening = true;
+                    micStatus.textContent = "Active 🟢";
+                    micBtn.textContent = "Disable Mic";
+                    startAudioProcessing();
+                } catch (err) {
+                    alert("Microphone access denied or unsupported over insecure HTTP. You can use the Spacebar fallback to blow out candles!");
+                    console.error(err);
+                }
+            } else {
+                if (audioContext) audioContext.close();
+                isListening = false;
+                micStatus.textContent = "Inactive";
+                micBtn.textContent = "Enable Mic to Blow";
+                meterFill.style.width = '0%';
+            }
+        });
+
+        function startAudioProcessing() {
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function analyze() {
+                if (!isListening) return;
+                analyser.getByteFrequencyData(dataArray);
+
+                let sum = 0;
+                for (let i = 0; i < bufferLength; i++) {
+                    sum += dataArray[i];
+                }
+                let average = sum / bufferLength;
+
+                let meterPercent = Math.min(100, (average / 50) * 100);
+                meterFill.style.width = meterPercent + '%';
+
+                if (average > 25 || spacebarPressed) {
+                    triggerBlowingEffect(true);
+                } else {
+                    triggerBlowingEffect(false);
+                }
+
+                requestAnimationFrame(analyze);
+            }
+            analyze();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                spacebarPressed = true;
+                meterFill.style.width = '100%';
+                triggerBlowingEffect(true);
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                spacebarPressed = false;
+                meterFill.style.width = '0%';
+                triggerBouncingFlames(false);
+            }
+        });
+
+        function triggerBlowingEffect(isBlowing) {
+            if (flamesExtinguished) return;
+
+            const flames = document.querySelectorAll('.flame');
+            if (isBlowing) {
+                flames.forEach(f => f.classList.add('blowing'));
+
+                if (!blowTimer) {
+                    blowTimer = setInterval(() => {
+                        blowDuration += 0.1;
+                        if (blowDuration >= 0.5) {
+                            extinguishCandles();
+                        }
+                    }, 100);
+                }
+            } else {
+                flames.forEach(f => f.classList.remove('blowing'));
+                if (blowTimer && !spacebarPressed) {
+                    clearInterval(blowTimer);
+                    blowTimer = null;
+                    blowDuration = Math.max(0, blowDuration - 0.2);
+                }
+            }
+        }
+
+        function triggerBouncingFlames(isBlowing) {
+            if (flamesExtinguished) return;
+            const flames = document.querySelectorAll('.flame');
+            flames.forEach(f => f.classList.remove('blowing'));
+            if (blowTimer) {
+                clearInterval(blowTimer);
+                blowTimer = null;
+                blowDuration = 0;
+            }
+        }
+
+        function extinguishCandles() {
+            if (flamesExtinguished) return;
+            flamesExtinguished = true;
+            if (blowTimer) clearInterval(blowTimer);
+
+            const flames = document.querySelectorAll('.flame');
+            flames.forEach(f => {
+                f.classList.remove('blowing');
+                f.classList.add('extinguished');
+            });
+
+            const successBanner = document.getElementById('wish-success');
+            successBanner.classList.add('show');
+        }
+    </script>
+</body>
+</html>
